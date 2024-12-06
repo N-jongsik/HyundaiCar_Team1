@@ -15,9 +15,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.autoever.hyundaicar.R
 import com.autoever.hyundaicar.models.Car
 import com.autoever.hyundaicar.viewmodel.WeatherViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kakao.vectormap.KakaoMapSdk
 import java.security.MessageDigest
@@ -27,11 +31,20 @@ import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private val weatherViewModel: WeatherViewModel by viewModels()
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
+        // NavHostFragment 찾기
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNavigationView.setupWithNavController(navController)
 
         /*try {
             val info = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -60,8 +73,8 @@ class MainActivity : AppCompatActivity() {
         }*/
 
         // 뷰 참조
-        val tvDate: TextView = findViewById(R.id.tvDate)
-        val tvTemperature: TextView = findViewById(R.id.tvTemperature)
+//        val tvDate: TextView = findViewById(R.id.tvDate)
+//        val tvTemperature: TextView = findViewById(R.id.tvTemperature)
 
         // 날씨 데이터 가져오기
         weatherViewModel.fetchWeatherData()
@@ -82,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 val skyImageResource = when (skyCode) {
                     "1" -> R.drawable.sunny_icon  // 맑음
                     "3" -> R.drawable.cloudy_icon // 구름 많음
-                    "4" -> R.drawable.cloud_icon // 흐림 (구름 많음과 동일 이미지로 설정 가능)
+                    "4" -> R.drawable.cloud_icon // 흐림
                     else -> R.drawable.sunny_icon // 기본값
                 }
 
@@ -111,33 +124,33 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 // 뷰에 데이터 업데이트
-                tvTemperature.text = temperatureData?.fcstValue?.let { "$it°C" } ?: "Loading..."
-                tvDate.text = formattedDate
+//                tvTemperature.text = temperatureData?.fcstValue?.let { "$it°C" } ?: "Loading..."
+//                tvDate.text = formattedDate
             }
 
             // View 초기화
-            val btnHome = findViewById<LinearLayout>(R.id.btnHome)
-            val btnControl = findViewById<LinearLayout>(R.id.btnControl)
-            val btnStatus = findViewById<LinearLayout>(R.id.btnStatus)
-            val btnMap = findViewById<LinearLayout>(R.id.btnMap)
-
-            // 버튼 동작
-            btnHome.setOnClickListener {
-                val intent = Intent(this@MainActivity, MainActivity::class.java)
-                startActivity(intent)
-            }
-            btnControl.setOnClickListener {
-                val intent = Intent(this@MainActivity, ControlActivity::class.java)
-                startActivity(intent)
-            }
-            btnStatus.setOnClickListener {
-                val intent = Intent(this@MainActivity, StatusActivity::class.java)
-                startActivity(intent)
-            }
-            btnMap.setOnClickListener {
-                val intent = Intent(this@MainActivity, MapActivity::class.java)
-                startActivity(intent)
-            }
+//            val btnHome = findViewById<LinearLayout>(R.id.btnHome)
+//            val btnControl = findViewById<LinearLayout>(R.id.btnControl)
+//            val btnStatus = findViewById<LinearLayout>(R.id.btnStatus)
+//            val btnMap = findViewById<LinearLayout>(R.id.btnMap)
+//
+//            // 버튼 동작
+//            btnHome.setOnClickListener {
+//                val intent = Intent(this@MainActivity, MainActivity::class.java)
+//                startActivity(intent)
+//            }
+//            btnControl.setOnClickListener {
+//                val intent = Intent(this@MainActivity, ControlActivity::class.java)
+//                startActivity(intent)
+//            }
+//            btnStatus.setOnClickListener {
+//                val intent = Intent(this@MainActivity, StatusActivity::class.java)
+//                startActivity(intent)
+//            }
+//            btnMap.setOnClickListener {
+//                val intent = Intent(this@MainActivity, MapActivity::class.java)
+//                startActivity(intent)
+//            }
         }
     }
 
